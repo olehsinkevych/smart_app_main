@@ -35,34 +35,6 @@ class BaseDevice(ABC):
             description=f"Microservice for {self.device_type} device",
             version="1.0.0"
         )
-        self._setup_routes()
-        self._setup_common_routes()
-
-    @abstractmethod
-    def _setup_routes(self):
-        ...
-
-    def _setup_common_routes(self):
-        app = self.app
-
-        @app.get("/")
-        async def root():
-            return {
-                "message": f"{self.device_type} Microservice",
-                "device_id": self.device_id,
-                "status": "online"
-            }
-
-        @app.get("/api/info")
-        async def get_info():
-            return DeviceInfo(
-                device_id=self.device_id,
-                device_type=self.device_type,
-                host=self.host, port=self.port,
-                status="online",
-                capabilities=self.get_capabilities(),
-                registered_at=datetime.now().isoformat()
-            ).model_dump()
 
     @abstractmethod
     def get_status(self) -> Dict[str, Any]:
